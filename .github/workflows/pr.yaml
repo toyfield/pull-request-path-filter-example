@@ -1,0 +1,30 @@
+name: "OOMOL: CI"
+
+on:
+  pull_request:
+    branches:
+      - "**"
+
+jobs:
+  skip:
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.filter.outputs.should_skip }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          fetch-depth: 0
+      - uses: leavesster/pull-request-path-filter@v0.2
+        id: "filter"
+        with:
+          paths: |
+            - "src/**"
+            - "!**.md"
+
+  echo:
+    runs-on: ubuntu-latest
+    needs: skip
+    if: ${{ needs.skip.outputs.should_skip == 'false' }}
+    steps:
+      - run: echo "This is a PR that should be processed"
