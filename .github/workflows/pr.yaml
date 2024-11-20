@@ -21,6 +21,10 @@ jobs:
           paths: |
             - "src/**"
             - "!**.md"
+      - name: Setup tmate session # only enable when debugging
+        uses: mxschmitt/action-tmate@v3
+        timeout-minutes: 10
+        if: failure()
 
   echo:
     runs-on: ubuntu-latest
